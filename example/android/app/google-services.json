@@ -1,0 +1,90 @@
+{
+  "project_info": {
+    "project_number": "461962602120",
+    "project_id": "naturemedix-32764",
+    "storage_bucket": "naturemedix-32764.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461962602120:android:862b91c21d4a8e090d613d",
+        "android_client_info": {
+          "package_name": "com.difrancescogianmarco.example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461962602120-gbr9rs6fhcsaqk5lcv4kmtf4e9k7k3ds.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCICprD7Zx21ClFu5ys71tAP89QocXbFDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461962602120-gbr9rs6fhcsaqk5lcv4kmtf4e9k7k3ds.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "461962602120-u21alpljldgh0c26n015l7vglshe04ar.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.naturemedix"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:461962602120:android:c3ab3369c06ccb4b0d613d",
+        "android_client_info": {
+          "package_name": "com.example.naturemedix"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "461962602120-dhvb4oqebdpvfjji72t9glubj1ieso2v.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.naturemedix",
+            "certificate_hash": "651b8e260222d06e79fb7d957f9899f35236ccc6"
+          }
+        },
+        {
+          "client_id": "461962602120-gbr9rs6fhcsaqk5lcv4kmtf4e9k7k3ds.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCICprD7Zx21ClFu5ys71tAP89QocXbFDI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "461962602120-gbr9rs6fhcsaqk5lcv4kmtf4e9k7k3ds.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "461962602120-u21alpljldgh0c26n015l7vglshe04ar.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.naturemedix"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

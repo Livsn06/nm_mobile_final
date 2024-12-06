@@ -1,27 +1,42 @@
 name: arcore_flutter_plugin_example
 description: Demonstrates how to use the arcore_flutter_plugin plugin.
-publish_to: 'none'
+publish_to: "none"
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
+  carousel_slider: ^5.0.0
+  cloud_firestore: ^5.5.0
+  connectivity_plus: ^6.1.0
+  file_picker: ^8.1.4
+  firebase_app_check: ^0.3.1+6
+  firebase_auth: ^5.3.3
+  firebase_storage: ^12.3.6
   flutter:
     sdk: flutter
+  flutter_dotenv: ^5.2.1
+  flutter_slidable: ^3.1.1
+  font_awesome_flutter: ^10.8.0
+  gap: ^3.0.1
+  get: ^4.6.6
+  google_fonts: ^6.2.1
+  google_sign_in: ^6.2.2
+  hive_flutter: ^1.1.0
+  image_picker: ^1.1.2
+  intl: ^0.20.1
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
+  arcore_flutter_plugin:
+    path: ../
   flutter_test:
     sdk: flutter
 
-  arcore_flutter_plugin:
-    path: ../
-
 # For information on the generic Dart part of this file, see the
 # following page: https://www.dartlang.org/tools/pub/pubspec
-
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -37,18 +52,22 @@ flutter:
     - assets/venom.jpg
     - assets/venom_with_eyes.jpg
     - assets/earth.jpg
+    - assets/alobera.jpg
     - assets/earth_augmented_image.jpg
     - assets/copertina.jpg
     - assets/umano_digitale.png
     - assets/myimages.imgdb
     - assets/topolino.jpg
-
+    - .env
+    - assets/icons/
+    - assets/images/
+    - assets/gifs/
+    - assets/herbal/plant/
+    - assets/herbal/remedy/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # For details regarding adding assets from package dependencies, see
   # https://flutter.dev/assets-and-images/#from-packages
-
   # To add custom fonts to your application, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
