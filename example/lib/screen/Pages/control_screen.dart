@@ -1,3 +1,4 @@
+import 'package:arcore_flutter_plugin_example/controllers/Data_Control/ct_plant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:arcore_flutter_plugin_example/controllers/Home_Control/home_controller.dart';
@@ -20,6 +21,9 @@ class ControlScreen extends StatefulWidget {
 class _ControlScreenState extends State<ControlScreen>
     with WidgetsBindingObserver {
   late PageController _pageController;
+
+  //
+  CtPlant ctPlant = Get.put(CtPlant());
 
   @override
   void initState() {

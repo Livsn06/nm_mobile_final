@@ -91,7 +91,7 @@ class UserModel {
       'email': _arrangeEmail(email!),
       'password': password,
       'password_confirmation': confirm_password,
-      'role': 'admin',
+      'role': 'user',
       'status': 'inactive',
     };
   }

@@ -1,3 +1,4 @@
+import 'package:arcore_flutter_plugin_example/models/data_model/md_plant.dart';
 import 'package:hive/hive.dart';
 import 'remedy_info.dart';
 

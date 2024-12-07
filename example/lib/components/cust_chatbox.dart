@@ -23,12 +23,12 @@ class _RemedyFeedbackScreenState extends State<RemedyFeedbackScreen>
       Get.put(PlantInfoController());
 
   void _submitRating(double rating) async {
-    await plantInfoController.saveRating(
-      widget.rateRemedy.remedyName,
-      rating,
-    );
-    plantInfoController.updateRemedyRating(
-        widget.rateRemedy.remedyName, rating);
+    // await plantInfoController.saveRating(
+    //   widget.rateRemedy.remedyName,
+    //   rating,
+    // );
+    // plantInfoController.updateRemedyRating(
+    //     widget.rateRemedy.remedyName, rating);
   }
 
   int selectedRating = 1;

@@ -11,6 +11,8 @@ class GetstartedScreen extends StatelessWidget with Application {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+    //
     return Scaffold(
       body: Stack(
         fit: StackFit.loose,
@@ -25,37 +27,60 @@ class GetstartedScreen extends StatelessWidget with Application {
             alignment: Alignment(0, setResponsiveSize(context, baseSize: 0.15)),
             child: Padding(
               padding: EdgeInsets.symmetric(
-                  horizontal: setResponsiveSize(context, baseSize: 18)),
+                horizontal:
+                    setResponsiveSize(context, baseSize: size.width * 0.05),
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.end,
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Gap(setResponsiveSize(context, baseSize: 20)),
-                  Text('NATUREMEDIX',
-                      style: style.displayLarge(context,
-                          color: color.primarylow, fontspace: 3, fontsize: 25)),
-                  Gap(setResponsiveSize(context, baseSize: 15)),
+                  Gap(setResponsiveSize(context, baseSize: size.height * 0.07)),
+                  Text(
+                    'NATUREMEDIX',
+                    style: style.displayLarge(context,
+                        color: color.primarylow,
+                        fontspace: 3,
+                        fontsize: size.width * 0.08),
+                  ),
+                  Gap(setResponsiveSize(context,
+                      baseSize: size.height * 0.016)),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: setResponsiveSize(context, baseSize: 18)),
+                      horizontal: setResponsiveSize(context,
+                          baseSize: size.width * 0.08),
+                    ),
                     child: Text(
                       '“Explore herbal plants and discover natural remedies to enhance your health and overall well-being.”',
                       textAlign: TextAlign.center,
-                      style: style.TitleMedium(context,
-                          color: color.primarylow, fontsize: 16),
+                      style: style.TitleMedium(
+                        context,
+                        color: color.primarylow,
+                        fontsize: size.width * 0.045,
+                      ),
                     ),
                   ),
-                  Gap(setResponsiveSize(context, baseSize: 20)),
+                  Gap(
+                    setResponsiveSize(
+                      context,
+                      baseSize: size.height / 900,
+                    ),
+                  ),
                   Image.asset(
                     image.BG5,
                     fit: BoxFit.cover,
-                    scale: setResponsiveSize(context, baseSize: 1.4),
+                    scale: setResponsiveSize(
+                      context,
+                      baseSize: size.width / 230,
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
-                        horizontal: setResponsiveSize(context, baseSize: 20),
-                        vertical: setResponsiveSize(context, baseSize: 30)),
+                      horizontal: setResponsiveSize(context,
+                          baseSize: size.width * 0.04),
+                      vertical: setResponsiveSize(context,
+                          baseSize: size.height * 0.05),
+                    ),
                     child: Column(
                       children: [
                         ElevatedButton(
@@ -94,7 +119,8 @@ class GetstartedScreen extends StatelessWidget with Application {
                             ),
                           ),
                         ),
-                        Gap(setResponsiveSize(context, baseSize: 20)),
+                        Gap(setResponsiveSize(context,
+                            baseSize: size.height * 0.02)),
                         ElevatedButton(
                           style: ButtonStyle(
                               elevation: WidgetStatePropertyAll(

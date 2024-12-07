@@ -6,17 +6,15 @@ import 'dart:developer';
 
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:arcore_flutter_plugin_example/helper/_init_dependencies.dart';
-import 'package:arcore_flutter_plugin_example/helper/api_plant.dart';
 import 'package:arcore_flutter_plugin_example/routes/screen_routes.dart';
-import 'package:arcore_flutter_plugin_example/screen/Pages/control_screen.dart';
 import 'package:path_provider/path_provider.dart';
 import 'SCREEN/SPLASH/splash_screen.dart';
+import 'api/api_plant.dart';
 import 'firebase_options.dart';
 import 'models/client_data.dart';
 import 'models/plant_info.dart';
@@ -75,7 +73,7 @@ class MainApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     log(name: 'API BASE', dotenv.env['API_BASE']!.toString());
-    ApiPlant.fetchAllPlants();
+
     return GetMaterialApp(
       initialBinding: InitDep(),
       initialRoute: ScreenRouter.getSplashscreenRoute,

@@ -23,7 +23,6 @@ class DashboardScreen extends StatefulWidget with Application {
 
 class _DashboardScreenState extends State<DashboardScreen> with Application {
   final _selectControl = TextEditingController();
-  final currentUser = FirebaseAuth.instance.currentUser!;
   final controller = Get.put(DashboardController());
   final plantController = Get.put(PlantInfoController());
 
@@ -40,11 +39,11 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
                   children: [
                     _buildCategoryChips(context),
                     RemedyPlantCarousel(
-                      remedies: plantList
-                          .map((plant) => plant.remedyList)
-                          .expand((remedies) => remedies)
-                          .toList(),
-                      plants: plantList,
+                      remedies: [], //plantList
+                      //     .map((plant) => plant.remedyList)
+                      //     .expand((remedies) => remedies)
+                      //     .toList(),
+                      plants: [], // plantList,
                     ),
                     ..._buildContent(context, controller),
                   ],
@@ -213,16 +212,16 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
       // Prepare the list of remedies with their respective ratings
       List<Map<String, dynamic>> remediesWithRatings = [];
 
-      for (var plant in plantList) {
-        for (var remedy in plant.remedyList) {
-          remediesWithRatings.add({
-            'remedy': remedy,
-            'rating': plantInfoController
-                    .overallRatingForRemedy[remedy.remedyName]?.value ??
-                0.0, // Default rating if none
-          });
-        }
-      }
+      // for (var plant in plantList) {
+      //   for (var remedy in plant.remedyList) {
+      //     remediesWithRatings.add({
+      //       'remedy': remedy,
+      //       'rating': plantInfoController
+      //               .overallRatingForRemedy[remedy.remedyName]?.value ??
+      //           0.0, // Default rating if none
+      //     });
+      //   }
+      // }
 
       // Sort the remedies list by the rating in descending order
       remediesWithRatings.sort((a, b) {
@@ -263,52 +262,55 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
 
     return Obx(() {
       // Create a list of popular plants
-      List<PlantData> popularPlant = List.from(plantList);
+      // List<PlantData> popularPlant = List.from(plantList);
 
-      // Sort the list based on reaction count in descending order
-      popularPlant.sort((a, b) {
-        int reactionA =
-            plantInfoController.plantReactions[a.plantName]?.value ?? 0;
-        int reactionB =
-            plantInfoController.plantReactions[b.plantName]?.value ?? 0;
-        return reactionB.compareTo(reactionA); // Sort in descending order
-      });
+      // // Sort the list based on reaction count in descending order
+      // popularPlant.sort((a, b) {
+      //   int reactionA =
+      //       plantInfoController.plantReactions[a.plantName]?.value ?? 0;
+      //   int reactionB =
+      //       plantInfoController.plantReactions[b.plantName]?.value ?? 0;
+      //   return reactionB.compareTo(reactionA); // Sort in descending order
+      // });
 
       // Update reaction counts for each plant dynamically
-      for (var plant in popularPlant) {
-        plantInfoController.updateReactionCount(plant.plantName);
-      }
+      // for (var plant in popularPlant) {
+      // plantInfoController.updateReactionCount(plant.plantName);
+      // }
 
       // Build the section with the sorted plants list
       return _buildSection(
         context,
         'Popular Herbal Plant',
-        popularPlant.map((plant) {
-          // Retrieve reaction count using the plant's name
-          int reactionCount =
-              plantInfoController.plantReactions[plant.plantName]?.value ?? 0;
+        // popularPlant.map((plant) {
+        //   // Retrieve reaction count using the plant's name
+        //   int reactionCount =
+        //       plantInfoController.plantReactions[plant.plantName]?.value ?? 0;
 
-          return _PopularHerbalPlantCard(
-            context,
-            plant,
-            controller,
-            reactionCount, // Pass the specific reaction count
-          );
-        }).toList(),
+        //   return _PopularHerbalPlantCard(
+        //     context,
+        //     plant,
+        //     controller,
+        //     reactionCount, // Pass the specific reaction count
+        //   );
+        // }).toList(),
+        [],
       );
     });
   }
 
   Widget _buildRecommendedHerbalPlant(
       BuildContext context, DashboardController controller) {
-    List<PlantData> randomizedPlants = List.from(plantList);
+    // List<PlantData> randomizedPlants = List.from(plantList);
     return _buildSection(
-        context,
-        'Recommended Herbal Plant',
-        randomizedPlants
-            .map((plant) =>
-                _RecommendedHerbalPlantCard(context, plant, controller))
-            .toList());
+      context,
+      'Recommended Herbal Plant',
+      // randomizedPlants
+      //     .map((plant) =>
+      //         _RecommendedHerbalPlantCard(context, plant, controller))
+      //     .toList());
+      [],
+    );
   }
 
   Widget _buildSection(BuildContext context, String title, List<Widget> items) {
@@ -343,16 +345,16 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
         ),
         GestureDetector(
           onTap: () {
-            if (title == 'Future Remedies') {
-              // Pass remedyList for Future Remedies
-              controller.gotoSeeAll(plantList, title);
-            } else if (title == 'Popular Herbal Plant') {
-              // Pass plantList for Popular Herbal Plant
-              controller.gotoSeeAll(plantList, title);
-            } else {
-              // Default, pass plantList or appropriate list for Recommendation
-              controller.gotoSeeAll(plantList, title);
-            }
+            // if (title == 'Future Remedies') {
+            //   // Pass remedyList for Future Remedies
+            //   controller.gotoSeeAll(plantList, title);
+            // } else if (title == 'Popular Herbal Plant') {
+            //   // Pass plantList for Popular Herbal Plant
+            //   controller.gotoSeeAll(plantList, title);
+            // } else {
+            //   // Default, pass plantList or appropriate list for Recommendation
+            //   controller.gotoSeeAll(plantList, title);
+            // }
           },
           child: Text(
             'See all',

@@ -14,7 +14,7 @@
     
     <application
         android:name="${applicationName}"
-        android:label="example"
+        android:label="NatureMedix"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

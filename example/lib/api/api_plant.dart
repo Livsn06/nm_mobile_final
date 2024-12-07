@@ -3,9 +3,9 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'dart:html' as html;
 
 import '../models/data_model/md_plant.dart';
+import '../utils/_session.dart';
 
 // "message": "Plant fetch successfully",
 //     "data": [
@@ -22,18 +22,20 @@ import '../models/data_model/md_plant.dart';
 //             "updated_at": "2024-12-03T07:04:16.000000Z"
 //         }
 //     ]
-class ApiPlant {
+class PlantApi {
   //
   static String base = dotenv.env['API_BASE']!;
   static Future<List<PlantModel>?> fetchAllPlants() async {
     String url = '$base/api/v1/plants';
-    // String? token = await SessionAccess.instance.getSessionToken();
+    String? token = await SessionAccess.instance.getSessionToken(
+      sessionName: SessionAccess.names.SESSION_LOGIN,
+    );
 
     var headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
       'ngrok-skip-browser-warning': 'true',
-      // 'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token'
     };
 
     try {

@@ -1,3 +1,7 @@
+import 'package:arcore_flutter_plugin_example/api/api_auth.dart';
+import 'package:arcore_flutter_plugin_example/constants/_savedUser.dart';
+import 'package:arcore_flutter_plugin_example/models/data_model/md_user.dart';
+import 'package:arcore_flutter_plugin_example/utils/_session.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -64,8 +68,11 @@ class LoginController extends GetxController {
   // sign in with google
   Future signInWithGoogle(BuildContext context, String msgType) async {
     try {
-      showLoadingAlert(context, "Logging In",
-          "Please wait while we verify your credentials...");
+      showLoadingAlert(
+        context,
+        "Logging In",
+        "Please wait while we verify your credentials...",
+      );
 
       final GoogleSignInAccount? googleSignInAccount =
           await googleSignIn.signIn();
@@ -79,28 +86,14 @@ class LoginController extends GetxController {
         final User userDetails =
             (await firebaseAuth.signInWithCredential(credential)).user!;
         print('User Credentials: $userDetails');
-        _uid = userDetails.uid;
 
-        // Check if the user is new or existing
-        // bool userExists = await checkUserExists();
-        // if (!userExists) {
-        //   // If the user is new, save to Firestore
-        //   _name = userDetails.displayName;
-        //   _email = userDetails.email;
-        //   _imageUrl = userDetails.photoURL;
-        //   _provider = "GOOGLE";
-        //   saveDataToFirestore();
-        // } else {
-        //   // If the user exists, fetch data from Firestore
-        //   await getUserDataFromFirestore(_uid);
-        // }
-
-        saveDataToSharedPreferences();
+        // saveDataToSharedPreferences();
         handleUserLogin(); // Call this after user login
         showValidationAlert(
             context, 'Successful', 'Successfully $msgType', msgType, true, () {
           Get.toNamed(ScreenRouter.getControlscreenRoute);
-          Get.snackbar('Successfully Login', 'Welcome back, $_name!',
+          Get.snackbar(
+              'Successfully Login', 'Welcome back, ${CURRENT_USER.value.name}!',
               icon: Icon(Icons.check_circle_outline,
                   color: Application().color.white),
               colorText: Application().color.white,
@@ -123,107 +116,88 @@ class LoginController extends GetxController {
 
   // Sign-in with email and password
   Future<void> signInWithEmail(
-    TextEditingController emailController,
-    TextEditingController passwordController,
+    UserModel user,
     BuildContext context,
     String msgType,
   ) async {
     try {
-      showLoadingAlert(context, "Logging In",
-          "Please wait while we verify your credentials...");
-
-      final userCredential = await firebaseAuth.signInWithEmailAndPassword(
-        email: emailController.text,
-        password: passwordController.text,
+      //shoe alert dialog
+      showLoadingAlert(
+        context,
+        "Logging In",
+        "Please wait while we verify your credentials...",
       );
-      if (userCredential.user != null) {
-        _uid = userCredential.user!.uid;
-        // bool userExists = await checkUserExists();
-        // if (userExists) {
-        //   // await getUserDataFromFirestore(_uid);
-        // } else {
-        //   // Save new user data to Firestore if required
-        //   _name = userCredential.user!.displayName ?? "No Name";
-        //   _email = userCredential.user!.email;
-        //   _provider = "EMAIL";
-        //   saveDataToFirestore();
-        // }
-        saveDataToSharedPreferences();
-        handleUserLogin();
+
+      //LOGIN AT FIREBASE AUTH
+      // final userCredential = await firebaseAuth.signInWithEmailAndPassword(
+      //   email: user.email!,
+      //   password: user.password!,
+      // );
+
+      // if (userCredential.user != null) {
+      //
+      //DELETE SESSIONS DATA
+      clearStoredSessionData();
+
+      //LOGIN AT API MYSQL
+      var response = await AuthenticationApi.auth.login(user);
+      Navigator.of(context).pop();
+
+      if (response is String) {
         showValidationAlert(
-            context, 'Successful', 'Successfully $msgType', msgType, true, () {
-          Get.toNamed(ScreenRouter.getControlscreenRoute);
-          Get.snackbar('Successfully Login', 'Welcome back, $_name!',
-              icon: Icon(Icons.check_circle_outline,
-                  color: Application().color.white),
-              colorText: Application().color.white,
-              snackPosition: SnackPosition.TOP,
-              backgroundColor: Application().color.valid);
-        });
+          context,
+          'Error',
+          response,
+          msgType,
+          false,
+          () {
+            Navigator.of(context).pop();
+          },
+        );
+        return;
       }
+
+      //STORE SESSION DATA
+      storeSessionData(newUser: response as UserModel);
+
+      showValidationAlert(
+        context,
+        'Successful',
+        'Successfully $msgType',
+        msgType,
+        true,
+        () {
+          Get.toNamed(ScreenRouter.getControlscreenRoute);
+          Get.snackbar(
+            'Successfully Login',
+            'Welcome back, ${user.name}!',
+            icon: Icon(Icons.check_circle_outline,
+                color: Application().color.white),
+            colorText: Application().color.white,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Application().color.valid,
+          );
+        },
+      );
+      // }
     } on FirebaseAuthException catch (e) {
       _handleAuthError(context, e, msgType);
     }
   }
 
-  // ENTRY FOR CLOUDFIRESTORE
+  void storeSessionData({required UserModel newUser}) async {
+    await SessionAccess.instance.storeSessionToken(
+      sessionName: SessionAccess.names.SESSION_LOGIN,
+      token: newUser.access_token,
+    );
+    await SessionAccess.instance.storeUserData(newUser);
+  }
 
-  // Future getUserDataFromFirestore(uid) async {
-  //   await FirebaseFirestore.instance
-  //       .collection("users")
-  //       .doc(uid)
-  //       .get()
-  //       .then((DocumentSnapshot snapshot) {
-  //     if (snapshot.exists) {
-  //       // Cast the snapshot data to Map<String, dynamic>
-  //       var data = snapshot.data() as Map<String, dynamic>;
-
-  //       _uid = data['uid'];
-  //       _name = data['name'];
-  //       _email = data['email'];
-  //       _imageUrl = data['image_url'];
-  //       _provider = data['provider'];
-  //       _address = data['address'];
-  //       _birthdate = data['birthdate'];
-  //       _gender = data['gender'];
-  //       _phoneNumber = data['phoneNumber'];
-  //     } else {
-  //       print("User data does not exist");
-  //     }
-  //   });
-  // }
-
-  // Future saveDataToFirestore() async {
-  //   if (_uid != null) {
-  //     final DocumentReference r =
-  //         FirebaseFirestore.instance.collection("users").doc(_uid);
-  //     await r.update({
-  //       "uid": _uid,
-  //       "name": _name,
-  //       "email": _email,
-  //       "image_url": _imageUrl,
-  //       "provider": _provider,
-  //     });
-  //   } else {
-  //     print("Error: uid is null");
-  //   }
-  //   update();
-  // }
-
-  Future saveDataToSharedPreferences() async {
-    final SharedPreferences s = await SharedPreferences.getInstance();
-
-    await s.setString('name', _name ?? 'Unknown');
-    await s.setString('email', _email ?? 'Unknown email');
-    await s.setString('uid', _uid ?? 'Unknown uid');
-    await s.setString('image_url', _imageUrl ?? Application().icon.noImage);
-    await s.setString('provider', _provider ?? 'Unknown provider');
-    await s.setString('address', _address ?? 'Unknown address');
-    await s.setString('birthdate', _birthdate ?? 'Unknown birthdate');
-    await s.setString('gender', _gender ?? 'Unknown gender');
-    await s.setString('phoneNumber', _phoneNumber ?? 'Unknown phoneNumber');
-    await s.setString('imageEmail', _imageEmail ?? 'Unknown imageEmail');
-    update();
+  void clearStoredSessionData() {
+    SessionAccess.instance.deleteSessionToken(
+      sessionName: SessionAccess.names.SESSION_LOGIN,
+    );
+    SessionAccess.instance.deleteUserData();
   }
 
   Future<void> getDataFromSharedPreferences() async {

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import '../../components/cust_elevatedbtn.dart';
 import '../../components/cust_textformfield.dart';
 import '../../controllers/Auth_Control/login_controller.dart';
+import '../../models/data_model/md_user.dart';
 import '../../routes/screen_routes.dart';
 import '../../utils/_initApp.dart';
 
@@ -157,8 +158,15 @@ class _LoginScreenState extends State<LoginScreen> with Application {
                           colors: color.primarylow,
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
-                              controller.signInWithEmail(_emailControl,
-                                  _passControl, context, 'login');
+                              UserModel user = UserModel(
+                                email: _emailControl.text,
+                                password: _passControl.text,
+                              );
+                              controller.signInWithEmail(
+                                user,
+                                context,
+                                'login',
+                              );
                             }
                           },
                           child: Text(

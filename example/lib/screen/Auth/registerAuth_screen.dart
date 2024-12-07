@@ -1,3 +1,4 @@
+import 'package:arcore_flutter_plugin_example/models/data_model/md_user.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -172,13 +173,19 @@ class _RegisterScreenState extends State<RegisterScreen> with Application {
                             colors: color.primarylow,
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
+                                UserModel user = UserModel(
+                                  name: _fnameControl.text,
+                                  email: _emailControl.text,
+                                  password: _passwordController.text,
+                                  confirm_password: _confirmControl.text,
+                                );
+
+                                //
                                 controller.toSignUpConfirm(
-                                    _fnameControl,
-                                    _emailControl,
-                                    _passwordController,
-                                    _confirmControl,
-                                    context,
-                                    'signup');
+                                  user,
+                                  context,
+                                  'signup',
+                                );
                               }
                             },
                             child: Text(
@@ -227,7 +234,9 @@ class _RegisterScreenState extends State<RegisterScreen> with Application {
                             colors: color.grey,
                             onPressed: () {
                               loginController.signInWithGoogle(
-                                  context, 'login');
+                                context,
+                                'login',
+                              );
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,

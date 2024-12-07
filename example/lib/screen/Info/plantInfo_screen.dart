@@ -27,7 +27,7 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
   @override
   void initState() {
     super.initState();
-    plantInfoController.fetchReactionState(widget.plant.plantName);
+    // plantInfoController.fetchReactionState(widget.plant.plantName);
   }
 
   @override
@@ -153,8 +153,8 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                                 ),
                               ),
                               onTap: () {
-                                plantInfoController
-                                    .toggleReactButton(widget.plant.plantName);
+                                // plantInfoController
+                                //     .toggleReactButton(widget.plant.plantName);
                               },
                             ),
                           ),

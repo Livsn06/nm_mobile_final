@@ -5,14 +5,14 @@ version: 0.1.1
 homepage: https://github.com/giandifra/arcore_flutter_plugin
 
 environment:
-  sdk: '>=3.0.0 <4.0.0'
-  flutter: '>=3.0.0'
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.0.0"
 
 dependencies:
   equatable: ^2.0.3
   flutter:
     sdk: flutter
-  meta: ^1.16.0
+  meta: ^1.15.0
   vector_math: ^2.1.4
 
 # For information on the generic Dart part of this file, see the

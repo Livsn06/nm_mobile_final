@@ -11,7 +11,6 @@ class SplashScreen extends StatelessWidget with Application {
 
   @override
   Widget build(BuildContext context) => GetBuilder<SplashController>(
-        init: SplashController(),
         builder: (controller) => Scaffold(
           body: Stack(
             fit: StackFit.loose,

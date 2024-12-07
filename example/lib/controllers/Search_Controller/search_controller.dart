@@ -21,7 +21,6 @@ class SearchingController extends GetxController {
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-
   Future<void> incrementSearchCount({
     required String name,
     required String type,
@@ -52,8 +51,6 @@ class SearchingController extends GetxController {
     }
   }
 
-
-
   void _filterResults() {
     final query = searchController.text.toLowerCase();
 
@@ -61,39 +58,39 @@ class SearchingController extends GetxController {
       filteredPlants.clear();
       filteredRemedies.clear();
     } else {
-      filteredPlants.value = plantList.where((plant) {
-        final matchesPlantName = plant.plantName.toLowerCase().contains(query);
-        final matchesScientificName =
-            plant.scientificName.toLowerCase().contains(query);
-        final matchesTreatment = plant.treatments
-            .any((treatment) => treatment.toLowerCase().contains(query));
-        final matchesRemedyInPlant = plant.remedyList.any((remedy) {
-          return remedy.remedyName.toLowerCase().contains(query) ||
-              remedy.treatment.toLowerCase().contains(query) ||
-              remedy.description.toLowerCase().contains(query);
-        });
+      filteredPlants.value = []; //plantList.where((plant) {
+      //   final matchesPlantName = plant.plantName.toLowerCase().contains(query);
+      //   final matchesScientificName =
+      //       plant.scientificName.toLowerCase().contains(query);
+      //   final matchesTreatment = plant.treatments
+      //       .any((treatment) => treatment.toLowerCase().contains(query));
+      //   final matchesRemedyInPlant = plant.remedyList.any((remedy) {
+      //     return remedy.remedyName.toLowerCase().contains(query) ||
+      //         remedy.treatment.toLowerCase().contains(query) ||
+      //         remedy.description.toLowerCase().contains(query);
+      //   });
 
-        return matchesPlantName ||
-            matchesScientificName ||
-            matchesTreatment ||
-            matchesRemedyInPlant;
-      }).toList();
+      //   return matchesPlantName ||
+      //       matchesScientificName ||
+      //       matchesTreatment ||
+      //       matchesRemedyInPlant;
+      // }).toList();
 
-      filteredRemedies.value =
-          plantList.expand((plant) => plant.remedyList).where((remedy) {
-        final matchesRemedyName =
-            remedy.remedyName.toLowerCase().contains(query);
-        final matchesRemedyType =
-            remedy.remedyType.toLowerCase().contains(query);
-        final matchesTreatment = remedy.treatment.toLowerCase().contains(query);
-        final matchesDescription =
-            remedy.description.toLowerCase().contains(query);
+      // filteredRemedies.value =
+      //     plantList.expand((plant) => plant.remedyList).where((remedy) {
+      //   final matchesRemedyName =
+      //       remedy.remedyName.toLowerCase().contains(query);
+      //   final matchesRemedyType =
+      //       remedy.remedyType.toLowerCase().contains(query);
+      //   final matchesTreatment = remedy.treatment.toLowerCase().contains(query);
+      //   final matchesDescription =
+      //       remedy.description.toLowerCase().contains(query);
 
-        return matchesRemedyName ||
-            matchesRemedyType ||
-            matchesTreatment ||
-            matchesDescription;
-      }).toList();
+      //   return matchesRemedyName ||
+      //       matchesRemedyType ||
+      //       matchesTreatment ||
+      //       matchesDescription;
+      // }).toList();
     }
     _sortFilteredResults();
   }

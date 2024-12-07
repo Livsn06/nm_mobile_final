@@ -1,9 +1,11 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:arcore_flutter_plugin_example/api/api_auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../components/cust_loadingAlert.dart';
 import '../../components/cust_validationAlert.dart';
+import '../../models/data_model/md_user.dart';
 import '../../routes/screen_routes.dart';
 import '../../utils/_initApp.dart';
 import '../../utils/responsive.dart';
@@ -68,28 +70,81 @@ class RegisterController extends GetxController {
 
   // Register User
   void toSignUpConfirm(
-    TextEditingController fnameControl,
-    TextEditingController emailControl,
-    TextEditingController passControl,
-    TextEditingController confirmControl,
+    UserModel user,
     BuildContext context,
     String msgType,
   ) async {
     try {
       if (isRememberMeChecked == true) {
-        UserCredential userCredential = await FirebaseAuth.instance
-            .createUserWithEmailAndPassword(
-                email: emailControl.text, password: passControl.text);
+        showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (context) => LoadingAlert(
+            title: "Registering...",
+            subtitle: "Please wait while we verify your credentials...",
+          ),
+        );
 
-        // await FirebaseFirestore.instance
-        //     .collection('users')
-        //     .doc(userCredential.user!.uid)
-        //     .set({
-        //   'uid': userCredential.user!.uid,
-        //   'name': fnameControl.text,
-        //   'email': emailControl.text,
-        //   'provider': 'EMAIL'
-        // });
+        UserCredential userCredential =
+            await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: user.email!,
+          password: user.password!,
+        );
+
+        if (userCredential.user != null) {
+          var response = await AuthenticationApi.auth.register(user);
+
+          if (response == 'Email already exists') {
+            Navigator.pop(context);
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => ValidationAlert(
+                title: "Error",
+                text: "Email already exists",
+                authType: msgType,
+                isValid: false,
+                onpress: () {
+                  Navigator.pop(context);
+                },
+              ),
+            );
+          }
+
+          if (response == 'Registration successful') {
+            Navigator.pop(context);
+            showDialog(
+              barrierDismissible: false,
+              context: context,
+              builder: (context) => ValidationAlert(
+                title: "Success",
+                text: "Registered successfully",
+                authType: msgType,
+                isValid: true,
+                onpress: () {
+                  Navigator.pop(context);
+                  Get.toNamed(ScreenRouter.getLoginRoute);
+                },
+              ),
+            );
+          }
+        } else {
+          Navigator.pop(context);
+          showDialog(
+            barrierDismissible: false,
+            context: context,
+            builder: (context) => ValidationAlert(
+              title: "Error",
+              text: "Error registering account",
+              authType: msgType,
+              isValid: false,
+              onpress: () {
+                Navigator.pop(context);
+              },
+            ),
+          );
+        }
+        Navigator.pop(context);
 
         // Show success alert
         showValidationAlert(

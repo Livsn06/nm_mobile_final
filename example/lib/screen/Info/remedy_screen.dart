@@ -24,8 +24,8 @@ class _RemedyInfoScreenState extends State<RemedyInfoScreen> with Application {
       Get.put(PlantInfoController());
 
   void _submitRating(double rating) async {
-    await plantInfoController.saveRating(widget.remedy.remedyName, rating);
-    plantInfoController.updateRemedyRating(widget.remedy.remedyName, rating);
+    // await plantInfoController.saveRating(widget.remedy.remedyName, rating);
+    // plantInfoController.updateRemedyRating(widget.remedy.remedyName, rating);
   }
 
   @override
