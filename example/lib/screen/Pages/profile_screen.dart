@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:arcore_flutter_plugin_example/constants/_savedUser.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -130,25 +131,29 @@ class _ProfileScreenState extends State<ProfileScreen> with Application {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
-                                    sp.name?.toUpperCase() ?? 'No Name',
-                                    style: style.smallText(context,
-                                        color: color.white,
-                                        fontsize: setResponsiveSize(context,
-                                            baseSize: 17),
-                                        fontweight: FontWeight.w600,
-                                        fontspace: 1),
-                                  ),
+                                  Obx(() {
+                                    return Text(
+                                      CURRENT_USER.value.email ?? 'No Name',
+                                      style: style.smallText(context,
+                                          color: color.white,
+                                          fontsize: setResponsiveSize(context,
+                                              baseSize: 17),
+                                          fontweight: FontWeight.w600,
+                                          fontspace: 1),
+                                    );
+                                  }),
                                   Gap(setResponsiveSize(context, baseSize: 2)),
-                                  Text(
-                                    '${sp.email}',
-                                    style: style.displaySmall(context,
-                                        color: color.white,
-                                        fontsize: setResponsiveSize(context,
-                                            baseSize: 12),
-                                        fontweight: FontWeight.w400,
-                                        fontstyle: FontStyle.italic),
-                                  ),
+                                  Obx(() {
+                                    return Text(
+                                      '${CURRENT_USER.value.name}',
+                                      style: style.displaySmall(context,
+                                          color: color.white,
+                                          fontsize: setResponsiveSize(context,
+                                              baseSize: 12),
+                                          fontweight: FontWeight.w400,
+                                          fontstyle: FontStyle.italic),
+                                    );
+                                  }),
                                   Gap(setResponsiveSize(context, baseSize: 5)),
                                   ElevatedButton(
                                     onPressed: () => Get.toNamed(

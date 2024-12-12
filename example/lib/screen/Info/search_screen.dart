@@ -209,7 +209,7 @@ class _SearchScreenState extends State<SearchScreen> with Application {
                                         name: plant.plantName,
                                         type: 'plants',
                                       );
-                                      dashControl.selectPlant(plant, context);
+                                      // dashControl.selectPlant(plant, context);
                                     },
                                     child: Text(
                                       'View',
@@ -257,7 +257,7 @@ class _SearchScreenState extends State<SearchScreen> with Application {
                                         name: remedy.remedyName,
                                         type: 'remedies',
                                       );
-                                      dashControl.selectRemedy(remedy, context);
+                                      // dashControl.selectRemedy(remedy, context);
                                     },
                                     child: Text(
                                       'View',

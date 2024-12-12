@@ -1,3 +1,4 @@
+import 'package:arcore_flutter_plugin_example/models/data_model/md_remedy.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -10,8 +11,8 @@ import 'package:arcore_flutter_plugin_example/utils/_initApp.dart';
 import 'package:arcore_flutter_plugin_example/utils/responsive.dart';
 
 class RemedyFeedbackScreen extends StatefulWidget {
-  const RemedyFeedbackScreen({super.key, required this.rateRemedy});
-  final RemedyInfo rateRemedy;
+  const RemedyFeedbackScreen({super.key, required this.remedy});
+  final RemedyModel remedy;
 
   @override
   State<RemedyFeedbackScreen> createState() => _RemedyFeedbackScreenState();
@@ -89,12 +90,8 @@ class _RemedyFeedbackScreenState extends State<RemedyFeedbackScreen>
                   context: context,
                   builder: (context) {
                     return CustRating(
-                      remedy: widget.rateRemedy,
-                      initialRating: (plantInfoController
-                              .overallRatingForRemedy[
-                                  widget.rateRemedy.remedyName]
-                              ?.value ??
-                          0),
+                      remedy: widget.remedy,
+                      initialRating: widget.remedy.average_rating!,
                     );
                   },
                 );

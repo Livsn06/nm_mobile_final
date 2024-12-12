@@ -211,8 +211,12 @@ class _RequestScreenState extends State<RequestScreen> with Application {
                             CustClientdialog(request: request)),
                   },
                   child: CardList(
-                    requestImage: Image.file(File(request.imagePaths[0]),
-                        width: 60, height: 60, fit: BoxFit.cover),
+                    requestImage: request.imagePaths.length == 0
+                        ? CircleAvatar(
+                            child: Text(request.title[0] + request.title[1]),
+                          )
+                        : Image.file(File(request.imagePaths[0]),
+                            width: 60, height: 60, fit: BoxFit.cover),
                     requestTitle: Text(
                       request.title,
                       style: style.displaySmall(context,
@@ -346,7 +350,7 @@ class _RequestScreenState extends State<RequestScreen> with Application {
 
           // Title input field
           Text(
-            '▣ Herbal Plant* ',
+            '▣ Plant Species* ',
             style: style.displaySmall(
               context,
               fontsize: setResponsiveSize(context, baseSize: 14),
@@ -359,9 +363,10 @@ class _RequestScreenState extends State<RequestScreen> with Application {
           Material(
             elevation: setResponsiveSize(context, baseSize: 3),
             child: TextField(
+              readOnly: controller.isOnPlantIdentification.value,
               controller: controller.titleController,
               decoration: InputDecoration(
-                hintText: 'Plant name',
+                hintText: 'Scientific Name',
                 hintStyle: style.displaySmall(context,
                     color: color.darkGrey,
                     fontsize: setResponsiveSize(context, baseSize: 13),

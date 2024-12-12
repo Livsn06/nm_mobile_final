@@ -5,17 +5,20 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 import '../models/data_model/md_image.dart';
+import '../utils/_session.dart';
 
-class ApiImage {
+class ImageApi {
   static String base = dotenv.env['API_BASE']!;
   static Future<ImageModel?> getImage(String image) async {
     String url = '$base/api/v1/images/image';
-    // String? token = await SessionAccess.instance.getSessionToken();
+    String? token = await SessionAccess.instance.getSessionToken(
+      sessionName: SessionAccess.names.SESSION_LOGIN,
+    );
 
     var headers = {
       'Accept': 'application/json',
       'ngrok-skip-browser-warning': 'true',
-      // 'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token'
     };
 
     try {
@@ -33,7 +36,6 @@ class ApiImage {
       }
 
       log(response.statusCode.toString(), name: 'API GET IMAGES ERROR');
-
       return null;
       //
     } catch (e) {

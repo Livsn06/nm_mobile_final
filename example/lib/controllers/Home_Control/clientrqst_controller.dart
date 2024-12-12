@@ -2,9 +2,12 @@
 
 import 'dart:io';
 import 'dart:typed_data';
+import 'package:arcore_flutter_plugin_example/api/api_request.dart';
+import 'package:arcore_flutter_plugin_example/components/cust_loadingAlert.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hive/hive.dart';
@@ -12,6 +15,8 @@ import 'package:image_picker/image_picker.dart';
 import '../../models/client_data.dart';
 import '../../components/cust_imagepick.dart';
 import '../../components/cust_ConfirmAlert.dart';
+import '../../models/data_model/md_form_image.dart';
+import '../../models/data_model/md_request_plant.dart';
 import '../../utils/_initApp.dart';
 
 class ClientRequestController extends GetxController {
@@ -31,6 +36,8 @@ class ClientRequestController extends GetxController {
   final indexImage = 0.obs;
   final ImagePicker _picker = ImagePicker();
   var selectedFiles = <File>[].obs;
+  var isOnPlantIdentification = false.obs;
+
   var imagesData =
       <Map<String, dynamic>>[].obs; // Stores image data (bytes and size)
 
@@ -193,6 +200,31 @@ class ClientRequestController extends GetxController {
       description: description,
       images: selectedFiles,
     )) {
+      showLoadingAlert(context, 'Submitting Request', 'Please wait...');
+      //
+
+      var addition = RequestPlantModel(
+        scientific_name: title,
+        description: description,
+      );
+
+      bool isSuccess =
+          await RequestApi.addRequest(addition, selectedFiles.value);
+
+      Get.close(1);
+      //
+      if (!isSuccess) {
+        Get.snackbar(
+          'Error',
+          'Failed to submit request. Please try again later.',
+          icon: Icon(Icons.error_outline, color: Application().color.white),
+          colorText: Application().color.white,
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Application().color.invalid,
+        );
+        return;
+      }
+      //
       Get.snackbar(
         'Success',
         'Request submitted successfully!',

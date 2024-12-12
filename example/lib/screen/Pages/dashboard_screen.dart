@@ -1,4 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:arcore_flutter_plugin_example/constants/_savedData.dart';
+import 'package:arcore_flutter_plugin_example/models/data_model/md_plant.dart';
+import 'package:arcore_flutter_plugin_example/models/data_model/md_remedy.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -9,10 +11,10 @@ import 'package:arcore_flutter_plugin_example/utils/_initApp.dart';
 import 'package:arcore_flutter_plugin_example/utils/responsive.dart';
 import '../../components/cust_cardlist.dart';
 import '../../components/cust_category.dart';
+import '../../constants/global_adds.dart';
 import '../../controllers/Home_Control/bookmark_controller.dart';
-import '../../data/PlantData/plant_data.dart';
 import '../../models/plant_info.dart';
-import '../../models/remedy_info.dart';
+import '../../routes/screen_routes.dart';
 
 class DashboardScreen extends StatefulWidget with Application {
   DashboardScreen({Key? key}) : super(key: key);
@@ -23,7 +25,7 @@ class DashboardScreen extends StatefulWidget with Application {
 
 class _DashboardScreenState extends State<DashboardScreen> with Application {
   final _selectControl = TextEditingController();
-  final controller = Get.put(DashboardController());
+  final ctDashboard = Get.put(DashboardController());
   final plantController = Get.put(PlantInfoController());
 
   @override
@@ -38,14 +40,19 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
                 child: Column(
                   children: [
                     _buildCategoryChips(context),
-                    RemedyPlantCarousel(
-                      remedies: [], //plantList
-                      //     .map((plant) => plant.remedyList)
-                      //     .expand((remedies) => remedies)
-                      //     .toList(),
-                      plants: [], // plantList,
-                    ),
-                    ..._buildContent(context, controller),
+                    Obx(() {
+                      // Combine remedies and plants TO CREATE CAROUSEL DATA
+                      ALL_REMEDY_PLANT_COMBINE_DATA.value.clear();
+                      ALL_REMEDY_PLANT_COMBINE_DATA.value
+                          .addAll(ALL_PLANTS_DATA.value);
+                      ALL_REMEDY_PLANT_COMBINE_DATA.value
+                          .addAll(ALL_REMEDIES_DATA.value);
+
+                      return RemedyPlantCarousel(
+                        combinedList: ALL_REMEDY_PLANT_COMBINE_DATA..shuffle(),
+                      );
+                    }),
+                    ..._buildContent(context),
                   ],
                 ),
               ),
@@ -54,15 +61,14 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
         ));
   }
 
-  List<Widget> _buildContent(
-      BuildContext context, DashboardController controller) {
+  List<Widget> _buildContent(BuildContext context) {
     return [
-      if (_isCategorySelected(controller, 'All', 'Future Remedies'))
-        _buildFutureRemedies(context, controller),
-      if (_isCategorySelected(controller, 'All', 'Plants'))
-        _buildPopularHerbalPlant(context, controller),
-      if (_isCategorySelected(controller, 'All', 'Recommendation'))
-        _buildRecommendedHerbalPlant(context, controller),
+      if (_isCategorySelected(ctDashboard, 'All', 'Future Remedies'))
+        _buildFutureRemedies(context),
+      if (_isCategorySelected(ctDashboard, 'All', 'Plants'))
+        _buildPopularHerbalPlant(context),
+      if (_isCategorySelected(ctDashboard, 'All', 'Recommendation'))
+        _buildRecommendedHerbalPlant(context),
       SizedBox(height: setResponsiveSize(context, baseSize: 80)),
     ];
   }
@@ -102,7 +108,7 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
             _buildTitleRow(context),
             Gap(setResponsiveSize(context, baseSize: 10)),
             Text(
-              controller.greeting.value,
+              ctDashboard.greeting.value,
               style: style.displaySmall(context,
                   color: color.white,
                   fontsize: 22,
@@ -204,116 +210,49 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
     );
   }
 
-  Widget _buildFutureRemedies(
-      BuildContext context, DashboardController controller) {
-    final PlantInfoController plantInfoController = Get.find();
-
+  Widget _buildFutureRemedies(BuildContext context) {
     return Obx(() {
-      // Prepare the list of remedies with their respective ratings
-      List<Map<String, dynamic>> remediesWithRatings = [];
-
-      // for (var plant in plantList) {
-      //   for (var remedy in plant.remedyList) {
-      //     remediesWithRatings.add({
-      //       'remedy': remedy,
-      //       'rating': plantInfoController
-      //               .overallRatingForRemedy[remedy.remedyName]?.value ??
-      //           0.0, // Default rating if none
-      //     });
-      //   }
-      // }
-
-      // Sort the remedies list by the rating in descending order
-      remediesWithRatings.sort((a, b) {
-        double ratingA = a['rating'];
-        double ratingB = b['rating'];
-        return ratingB.compareTo(ratingA); // Descending order
-      });
-
       // Build the section with the sorted remedies list
       return _buildSection(
         context,
-        'Future Remedies',
-        remediesWithRatings.map((item) {
-          var remedy = item['remedy'];
-          var rating = item['rating'];
-
-          return Obx(() {
-            // Dynamically fetch the rating for each remedy
-            double currentRating = plantInfoController
-                    .overallRatingForRemedy[remedy.remedyName]?.value ??
-                rating;
-
-            return _buildRemedyCard(
-              context,
-              remedy,
-              controller,
-              currentRating, // Pass the specific rating for the remedy
-            );
-          });
+        title: 'Future Remedies',
+        items: ALL_REMEDY_SORT_BY_RATINGS.value.map((remedy) {
+          return _buildRemedyCard(
+            context,
+            remedy,
+          );
         }).toList(),
       );
     });
   }
 
-  Widget _buildPopularHerbalPlant(
-      BuildContext context, DashboardController controller) {
-    final PlantInfoController plantInfoController = Get.find();
-
+  Widget _buildPopularHerbalPlant(BuildContext context) {
     return Obx(() {
-      // Create a list of popular plants
-      // List<PlantData> popularPlant = List.from(plantList);
-
-      // // Sort the list based on reaction count in descending order
-      // popularPlant.sort((a, b) {
-      //   int reactionA =
-      //       plantInfoController.plantReactions[a.plantName]?.value ?? 0;
-      //   int reactionB =
-      //       plantInfoController.plantReactions[b.plantName]?.value ?? 0;
-      //   return reactionB.compareTo(reactionA); // Sort in descending order
-      // });
-
-      // Update reaction counts for each plant dynamically
-      // for (var plant in popularPlant) {
-      // plantInfoController.updateReactionCount(plant.plantName);
-      // }
-
       // Build the section with the sorted plants list
       return _buildSection(
         context,
-        'Popular Herbal Plant',
-        // popularPlant.map((plant) {
-        //   // Retrieve reaction count using the plant's name
-        //   int reactionCount =
-        //       plantInfoController.plantReactions[plant.plantName]?.value ?? 0;
-
-        //   return _PopularHerbalPlantCard(
-        //     context,
-        //     plant,
-        //     controller,
-        //     reactionCount, // Pass the specific reaction count
-        //   );
-        // }).toList(),
-        [],
+        title: 'Popular Herbal Plant',
+        items: ALL_PLANT_SORT_BY_LIKES.value.map((plant) {
+          return _PopularHerbalPlantCard(context, plant);
+        }).toList(),
       );
     });
   }
 
-  Widget _buildRecommendedHerbalPlant(
-      BuildContext context, DashboardController controller) {
-    // List<PlantData> randomizedPlants = List.from(plantList);
-    return _buildSection(
-      context,
-      'Recommended Herbal Plant',
-      // randomizedPlants
-      //     .map((plant) =>
-      //         _RecommendedHerbalPlantCard(context, plant, controller))
-      //     .toList());
-      [],
-    );
+  Widget _buildRecommendedHerbalPlant(BuildContext context) {
+    return Obx(() {
+      return _buildSection(
+        context,
+        title: 'Recommended Herbal Plant',
+        items: ALL_PLANTS_DATA.value
+            .map((plant) => _RecommendedHerbalPlantCard(context, plant))
+            .toList(),
+      );
+    });
   }
 
-  Widget _buildSection(BuildContext context, String title, List<Widget> items) {
+  Widget _buildSection(BuildContext context,
+      {required String title, required List<Widget> items}) {
     return Padding(
       padding: EdgeInsets.symmetric(
           vertical: setResponsiveSize(context, baseSize: 20),
@@ -368,100 +307,86 @@ class _DashboardScreenState extends State<DashboardScreen> with Application {
     );
   }
 
-  Widget _PopularHerbalPlantCard(BuildContext context, PlantData plant,
-      DashboardController controller, int totalReactions) {
-    final bookmarkController = Get.put(BookmarkController());
-
-    return Obx(() {
-      bool isBookmarked = bookmarkController.isPlantBookmarked(plant);
-      return GestureDetector(
-        onTap: () => controller.selectPlant(plant, context),
-        child: Stack(
-          children: [
-            PopularHerbalPlantCard(
-                imagePath: plant.plantImages[0],
-                title: plant.plantName,
-                description: plant.scientificName,
-                bookmarkIcon:
-                    isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
-                onBookmarkTap: () {
-                  if (isBookmarked) {
-                    bookmarkController.removeBookmark(plant, context);
-                  } else {
-                    bookmarkController.addBookmark(plant);
-                  }
-                },
-                totalReactions: totalReactions)
-          ],
-        ),
-      );
-    });
+  Widget _PopularHerbalPlantCard(BuildContext context, PlantModel plant) {
+    bool isBookmarked = false; //bookmarkController.isPlantBookmarked(plant);
+    return GestureDetector(
+      onTap: () {
+        ctDashboard.selectPlant(plant, context);
+      },
+      child: Stack(
+        children: [
+          PopularHerbalPlantCard(
+            imagePath: plant.images![0],
+            title: plant.name!,
+            description: plant.scientific_name!,
+            bookmarkIcon:
+                isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
+            onBookmarkTap: () {
+              // if (isBookmarked) {
+              //   bookmarkController.removeBookmark(plant, context);
+              // } else {
+              //   bookmarkController.addBookmark(plant);
+              // }
+            },
+            totalReactions: plant.total_likes!,
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget _RecommendedHerbalPlantCard(
-    BuildContext context,
-    PlantData plant,
-    DashboardController controller,
-  ) {
-    final bookmarkController = Get.put(BookmarkController());
-
-    return Obx(() {
-      bool isBookmarked = bookmarkController.isPlantBookmarked(plant);
-      return GestureDetector(
-        onTap: () => controller.selectPlant(plant, context),
-        child: Stack(
-          children: [
-            RecommendedPlantCard(
-              imagePath: plant.plantImages[0],
-              title: plant.plantName,
-              description: plant.scientificName,
-              bookmarkIcon:
-                  isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
-              onBookmarkTap: () {
-                if (isBookmarked) {
-                  bookmarkController.removeBookmark(plant, context);
-                } else {
-                  bookmarkController.addBookmark(plant);
-                }
-              },
-            ),
-          ],
-        ),
-      );
-    });
+  Widget _RecommendedHerbalPlantCard(BuildContext context, PlantModel plant) {
+    bool isBookmarked = false; //bookmarkController.isPlantBookmarked(plant);
+    return GestureDetector(
+      onTap: () {},
+      child: Stack(
+        children: [
+          RecommendedPlantCard(
+            imagePath: plant.images![0],
+            title: plant.name!,
+            description: plant.scientific_name!,
+            bookmarkIcon:
+                isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
+            onBookmarkTap: () {
+              // if (isBookmarked) {
+              //   bookmarkController.removeBookmark(plant, context);
+              // } else {
+              //   bookmarkController.addBookmark(plant);
+              // }
+            },
+          ),
+        ],
+      ),
+    );
   }
 
-  Widget _buildRemedyCard(BuildContext context, RemedyInfo remedy,
-      DashboardController controller, double rating) {
+  Widget _buildRemedyCard(BuildContext context, RemedyModel remedy) {
     final bookmarkController = Get.put(BookmarkController());
 
-    // Call fetchRating when the widget is built
-
-    return Obx(() {
-      bool isBookmarked = bookmarkController.isRemedyBookmarked(remedy);
-
-      return GestureDetector(
-        onTap: () => controller.selectRemedy(remedy, context),
-        child: Stack(
-          children: [
-            RemedyPlantCard(
-              imagePath: remedy.remedyImages[0],
-              title: remedy.remedyName,
-              description: remedy.remedyType,
-              bookmarkIcon:
-                  isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
-              onBookmarkTap: () {
-                if (isBookmarked) {
-                  bookmarkController.removeRemedyBookmark(remedy, context);
-                } else {
-                  bookmarkController.addRemedyBookmark(remedy);
-                }
-              },
-              rating: rating,
-            ),
-          ],
-        ),
-      );
-    });
+    bool isBookmarked = false;
+    return GestureDetector(
+      onTap: () {
+        ctDashboard.selectRemedy(remedy, context);
+      },
+      child: Stack(
+        children: [
+          RemedyPlantCard(
+            imagePath: remedy.image_path![0],
+            title: remedy.name!,
+            description: remedy.type!,
+            bookmarkIcon:
+                isBookmarked ? Icons.bookmark : Icons.bookmark_outline,
+            onBookmarkTap: () {
+              // if (isBookmarked) {
+              //   bookmarkController.removeRemedyBookmark(remedy, context);
+              // } else {
+              //   bookmarkController.addRemedyBookmark();
+              // }
+            },
+            rating: remedy.average_rating!,
+          ),
+        ],
+      ),
+    );
   }
 }

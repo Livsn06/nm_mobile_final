@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:arcore_flutter_plugin_example/constants/global_adds.dart';
 import 'package:arcore_flutter_plugin_example/controllers/Data_Control/ct_plant.dart';
+import 'package:arcore_flutter_plugin_example/controllers/Data_Control/ct_remedy.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:arcore_flutter_plugin_example/controllers/Home_Control/home_controller.dart';
@@ -20,19 +24,18 @@ class ControlScreen extends StatefulWidget {
 
 class _ControlScreenState extends State<ControlScreen>
     with WidgetsBindingObserver {
-  late PageController _pageController;
-
   //
   CtPlant ctPlant = Get.put(CtPlant());
+  CtRemedy ctRemedy = Get.put(CtRemedy());
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(initialPage: 0);
+    pageController = PageController(initialPage: 0);
     final int? initialPage = Get.arguments as int?;
     if (initialPage != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        _pageController.jumpToPage(initialPage);
+        pageController.jumpToPage(initialPage);
         Get.find<HomeController>().updateIndex(initialPage);
       });
     }
@@ -40,7 +43,7 @@ class _ControlScreenState extends State<ControlScreen>
 
   @override
   void dispose() {
-    _pageController.dispose();
+    pageController.dispose();
     super.dispose();
   }
 
@@ -50,7 +53,7 @@ class _ControlScreenState extends State<ControlScreen>
       int? index = Get.arguments as int?;
       if (index != null) {
         Get.find<HomeController>().updateIndex(index);
-        _pageController.jumpToPage(index);
+        pageController.jumpToPage(index);
       }
     }
   }
@@ -65,8 +68,13 @@ class _ControlScreenState extends State<ControlScreen>
         body: Stack(
           children: [
             PageView(
-              controller: _pageController,
+              controller: pageController,
               onPageChanged: (index) {
+                if (index == 2) {
+                  isOpenCamera.value = true;
+                } else {
+                  isOpenCamera.value = false;
+                }
                 if (controller.selectedIndex.value != index) {
                   controller.updateIndex(index);
                 }
@@ -79,22 +87,27 @@ class _ControlScreenState extends State<ControlScreen>
                 ProfileScreen(),
               ],
             ),
-            Positioned(
-              bottom: setResponsiveSize(context, baseSize: 0),
-              left: setResponsiveSize(context, baseSize: 0),
-              right: setResponsiveSize(context, baseSize: 0),
-              child: Obx(
-                () => ButtomNav(
-                  selectedIndex: controller.selectedIndex.value,
-                  onTap: (index) {
-                    if (_pageController.page != index.toDouble()) {
-                      controller.updateIndex(index);
-                      _pageController.jumpToPage(index);
-                    }
-                  },
+            Obx(() {
+              return Visibility(
+                visible: !isOpenCamera.value,
+                child: Positioned(
+                  bottom: setResponsiveSize(context, baseSize: 0),
+                  left: setResponsiveSize(context, baseSize: 0),
+                  right: setResponsiveSize(context, baseSize: 0),
+                  child: Obx(
+                    () => ButtomNav(
+                      selectedIndex: controller.selectedIndex.value,
+                      onTap: (index) {
+                        if (pageController.page != index.toDouble()) {
+                          controller.updateIndex(index);
+                          pageController.jumpToPage(index);
+                        }
+                      },
+                    ),
+                  ),
                 ),
-              ),
-            ),
+              );
+            }),
           ],
         ),
       ),

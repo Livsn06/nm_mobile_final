@@ -45,7 +45,7 @@ class PlantApi {
       if (response.statusCode == 200) {
         final result = jsonDecode(response.body);
         log('Plants fetched successfully', name: 'API PLANT');
-        // log(result['data'], name: 'API PLANT');
+        // log(result['data'].toString(), name: 'API PLANT');
         return PlantModel.listFromJson(result['data']);
       }
 

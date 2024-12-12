@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 
 import '../models/data_model/md_login.dart';
 import '../models/data_model/md_user.dart';
+import '../utils/_session.dart';
 
 class AuthenticationApi {
   static final auth = AuthenticationApi();
@@ -141,15 +142,17 @@ class AuthenticationApi {
   }
 
   //
-  Future<void> logoutAccount() async {
-    String url = '$base/api/v1/users/logout';
-    // String? token = await SessionAccess.instance.getSessionToken();
+  Future<bool> logoutAccount() async {
+    String url = '$base/api/auth/logout';
+    String? token = await SessionAccess.instance.getSessionToken(
+      sessionName: SessionAccess.names.SESSION_LOGIN,
+    );
 
     //
     var headers = {
       'Accept': 'application/json',
       'ngrok-skip-browser-warning': 'true',
-      // 'Authorization': 'Bearer $token'
+      'Authorization': 'Bearer $token'
     };
 
     try {
@@ -160,25 +163,17 @@ class AuthenticationApi {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
+
         log('LOGOUT successful', name: 'API LOGOUT');
-        // return ResponseModel.fromEmailOnlyJson(data, success: true);
-        return;
+        return true;
       }
 
-      if (response.statusCode == 422) {
-        final data = jsonDecode(response.body);
-        return;
-      }
+      return false;
 
-      if (response.statusCode == 401) {
-        final data = jsonDecode(response.body);
-        return;
-      }
-      return null;
+      //
     } catch (e) {
-      Get.close(1);
       log(e.toString(), name: 'API LOGOUT');
+      return false;
     }
-    return;
   }
 }

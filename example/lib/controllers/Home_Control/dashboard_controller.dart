@@ -1,3 +1,7 @@
+import 'package:arcore_flutter_plugin_example/constants/_savedData.dart';
+import 'package:arcore_flutter_plugin_example/constants/global_adds.dart';
+import 'package:arcore_flutter_plugin_example/models/data_model/md_plant.dart';
+import 'package:arcore_flutter_plugin_example/models/data_model/md_remedy.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:arcore_flutter_plugin_example/controllers/PlantInfo_Control/plantInfos_controller.dart';
@@ -22,9 +26,9 @@ class DashboardController extends GetxController {
     super.onInit();
     updateGreeting();
     // Initialize filtered lists
-    filteredPlants.value = plantList;
-    filteredRemedies.value =
-        plantList.expand((plant) => plant.remedyList).toList();
+    // filteredPlants.value = plantList;
+    // filteredRemedies.value =
+    //     plantList.expand((plant) => plant.remedyList).toList();
   }
 
   void updateGreeting() {
@@ -43,18 +47,12 @@ class DashboardController extends GetxController {
     update();
   }
 
-  void selectPlant(PlantData plant, BuildContext context) {
-    Get.toNamed(
-      ScreenRouter.getPlantInfoRoute,
-      arguments: plant,
-    );
+  void selectPlant(PlantModel plant, BuildContext context) {
+    Get.toNamed(ScreenRouter.getPlantInfoRoute, arguments: plant);
   }
 
-  void selectRemedy(RemedyInfo remedy, BuildContext context) {
-    Get.toNamed(
-      ScreenRouter.getRemedyInfoRoute,
-      arguments: remedy,
-    );
+  void selectRemedy(RemedyModel remedy, BuildContext context) {
+    Get.toNamed(ScreenRouter.getRemedyInfoRoute, arguments: remedy);
   }
 
   void goToSearch() {

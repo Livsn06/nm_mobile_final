@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:arcore_flutter_plugin_example/api/api_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -96,7 +97,28 @@ class ProfileController extends GetxController {
       'Logout',
       'Are you sure you want to logout?',
       () async {
-        sp.userSignOut();
+        bool isSuccess = await AuthenticationApi.auth.logoutAccount();
+
+        if (!isSuccess) {
+          Get.snackbar(
+            'Error',
+            'Failed to logout. Please try again later.',
+            icon: Icon(Icons.error_outline, color: Application().color.white),
+            colorText: Application().color.white,
+            snackPosition: SnackPosition.TOP,
+            backgroundColor: Application().color.invalid,
+          );
+        }
+
+        Get.snackbar(
+          'Success',
+          'Logout successful',
+          icon: Icon(Icons.check_circle_outline_outlined,
+              color: Application().color.white),
+          colorText: Application().color.white,
+          snackPosition: SnackPosition.TOP,
+          backgroundColor: Application().color.valid,
+        );
         Get.offAllNamed(ScreenRouter.getLoginRoute);
       },
       Application().gif.question,

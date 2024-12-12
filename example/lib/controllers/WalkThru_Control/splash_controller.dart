@@ -7,8 +7,14 @@ import 'package:arcore_flutter_plugin_example/routes/screen_routes.dart';
 
 import '../../models/data_model/md_user.dart';
 import '../../utils/_initApp.dart';
+import '../Data_Control/ct_plant.dart';
+import '../Data_Control/ct_remedy.dart';
 
 class SplashController extends GetxController {
+  CtPlant ctPlant = Get.put(CtPlant());
+  CtRemedy ctRemedy = Get.put(CtRemedy());
+
+  //
   @override
   void onReady() {
     sessionCheck();
@@ -25,7 +31,7 @@ class SplashController extends GetxController {
     var session = await SessionAccess.instance.getSessionToken(
       sessionName: SessionAccess.names.SESSION_LOGIN,
     );
-    print("Session: $session");
+    print("Session Active: $session");
     if (session == null) {
       return false;
     }
@@ -66,7 +72,8 @@ class SplashController extends GetxController {
         snackPosition: SnackPosition.TOP,
         backgroundColor: Application().color.valid,
       );
-
+      ctPlant.loadData();
+      ctRemedy.loadData();
       return;
     }
 

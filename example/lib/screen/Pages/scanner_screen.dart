@@ -1,8 +1,11 @@
+import 'package:arcore_flutter_plugin_example/ar_screens/screens/camerascreen_adds.dart';
+import 'package:arcore_flutter_plugin_example/ar_screens/screens/hello_world_adds.dart';
+import 'package:arcore_flutter_plugin_example/constants/global_adds.dart';
+import 'package:arcore_flutter_plugin_example/controllers/Data_Control/ct_plant.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:arcore_flutter_plugin_example/utils/_initApp.dart';
 
-import '../../ar_screens/hello_world.dart';
 import '../../utils/responsive.dart';
 import 'control_screen.dart';
 
@@ -14,6 +17,8 @@ class ScannerScreen extends StatefulWidget with Application {
 }
 
 class _ScannerScreenState extends State<ScannerScreen> with Application {
+  var ctPlant = Get.put(CtPlant());
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -21,6 +26,7 @@ class _ScannerScreenState extends State<ScannerScreen> with Application {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(kToolbarHeight),
         child: AppBar(
+          automaticallyImplyLeading: false,
           iconTheme: IconThemeData(color: color.primary),
           centerTitle: true,
           flexibleSpace: Container(
@@ -56,7 +62,7 @@ class _ScannerScreenState extends State<ScannerScreen> with Application {
           ),
         ),
       ),
-      body: HelloWorld(),
+      body: ARScreen(),
     );
   }
 }

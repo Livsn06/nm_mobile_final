@@ -6,6 +6,7 @@ import 'package:arcore_flutter_plugin_example/controllers/Home_Control/bookmark_
 import 'package:arcore_flutter_plugin_example/controllers/Home_Control/dashboard_controller.dart';
 import 'package:arcore_flutter_plugin_example/utils/_initApp.dart';
 import 'package:arcore_flutter_plugin_example/utils/responsive.dart';
+import '../../models/data_model/md_remedy.dart';
 import '../../models/plant_info.dart';
 import '../../models/remedy_info.dart';
 import 'control_screen.dart';
@@ -218,8 +219,8 @@ class _BookmarkScreenState extends State<BookmarkScreen> with Application {
                             final item = bookmarks[index];
                             if (item is PlantData) {
                               return InkWell(
-                                onTap: () =>
-                                    dashControl.selectPlant(item, context),
+                                onTap: () {},
+                                // dashControl.selectPlant(item, context),
                                 child: CardList(
                                   requestImage: Image.asset(item.plantImages[0],
                                       width: 70, height: 70),
@@ -233,8 +234,8 @@ class _BookmarkScreenState extends State<BookmarkScreen> with Application {
                               );
                             } else if (item is RemedyInfo) {
                               return InkWell(
-                                onTap: () =>
-                                    dashControl.selectRemedy(item, context),
+                                onTap: () => dashControl.selectRemedy(
+                                    item as RemedyModel, context),
                                 child: CardList(
                                   requestImage: Image.asset(
                                       item.remedyImages[0],

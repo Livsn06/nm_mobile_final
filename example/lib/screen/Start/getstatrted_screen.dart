@@ -158,7 +158,6 @@ class GetstartedScreen extends StatelessWidget with Application {
                       ],
                     ),
                   ),
-                  Gap(setResponsiveSize(context, baseSize: 20)),
                 ],
               ),
             ),

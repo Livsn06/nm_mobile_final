@@ -45,7 +45,7 @@ class _ObjectWithTextureAndRotationState
   }
 
   Future _addSphere() async {
-    final ByteData textureBytes = await rootBundle.load('assets/italia.png');
+    final ByteData textureBytes = await rootBundle.load('assets/topolino.jpg');
 
     final material = ArCoreMaterial(
       color: Color.fromARGB(120, 66, 134, 244),

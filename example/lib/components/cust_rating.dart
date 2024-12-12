@@ -7,13 +7,15 @@ import 'package:arcore_flutter_plugin_example/models/remedy_info.dart';
 import 'package:arcore_flutter_plugin_example/Utils/_initApp.dart';
 import 'package:arcore_flutter_plugin_example/Utils/responsive.dart';
 
-class CustRating extends StatefulWidget {
-  final RemedyInfo remedy;
+import '../models/data_model/md_remedy.dart';
 
+class CustRating extends StatefulWidget {
+  final RemedyModel remedy;
+  final double initialRating;
   const CustRating({
     super.key,
     required this.remedy,
-    required num initialRating,
+    required this.initialRating,
   });
 
   @override
@@ -77,7 +79,7 @@ class _CustRatingState extends State<CustRating> with Application {
                   children: [
                     Gap(setResponsiveSize(context, baseSize: 20)),
                     Text(
-                      'RATE ${widget.remedy.remedyName.toUpperCase()}',
+                      'RATE ${widget.remedy.name!.toUpperCase()}',
                       textAlign: TextAlign.center,
                       style: style.displaySmall(
                         context,

@@ -12,6 +12,7 @@ class IngredientModel {
   });
 
   static List<IngredientModel> listFromJson(List<dynamic> jsonList) {
+    if (jsonList.isEmpty) return [];
     return jsonList.map((json) => IngredientModel.fromJson(json)).toList();
   }
 

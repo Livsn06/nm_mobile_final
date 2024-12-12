@@ -6,6 +6,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
+import '../../constants/_savedUser.dart';
 import '../../controllers/Auth_Control/login_controller.dart';
 import '../../controllers/Home_Control/profile_controller.dart';
 import '../../routes/screen_routes.dart';
@@ -24,7 +25,6 @@ class _ViewProfileScreenState extends State<ViewProfileScreen>
     with Application {
   @override
   Widget build(BuildContext context) {
-    final ProfileController profileController = Get.put(ProfileController());
     return GetBuilder<LoginController>(
       init: Get.put(LoginController()),
       builder: (sp) {
@@ -176,22 +176,25 @@ class _ViewProfileScreenState extends State<ViewProfileScreen>
                               )),
                         ),
                         Gap(setResponsiveSize(context, baseSize: 15)),
-                        TextFormField(
-                          readOnly: true,
-                          decoration: InputDecoration(
-                              hintText: sp.email,
-                              hintStyle: TextStyle(
-                                  color: color.darkGrey,
-                                  fontWeight: FontWeight.w500),
-                              border: sp.borderCust,
-                              enabledBorder: sp.borderCust,
-                              focusedBorder: sp.borderCust,
-                              prefixIcon: Icon(
-                                Icons.email_outlined,
-                                color: color.primarylow,
-                                size: setResponsiveSize(context, baseSize: 20),
-                              )),
-                        ),
+                        Obx(() {
+                          return TextFormField(
+                            readOnly: true,
+                            decoration: InputDecoration(
+                                hintText: CURRENT_USER.value.email,
+                                hintStyle: TextStyle(
+                                    color: color.darkGrey,
+                                    fontWeight: FontWeight.w500),
+                                border: sp.borderCust,
+                                enabledBorder: sp.borderCust,
+                                focusedBorder: sp.borderCust,
+                                prefixIcon: Icon(
+                                  Icons.email_outlined,
+                                  color: color.primarylow,
+                                  size:
+                                      setResponsiveSize(context, baseSize: 20),
+                                )),
+                          );
+                        }),
                         Gap(setResponsiveSize(context, baseSize: 15)),
                         TextFormField(
                           readOnly: true,
@@ -226,13 +229,13 @@ class _ViewProfileScreenState extends State<ViewProfileScreen>
                               size: setResponsiveSize(context, baseSize: 20),
                             ),
                           ),
-                          initialValue: profileController.birthdate.text,
+                          initialValue: "none",
                         ),
                         Gap(setResponsiveSize(context, baseSize: 15)),
                         TextFormField(
                           readOnly: true,
                           keyboardType: TextInputType.number,
-                          initialValue: profileController.birthdate.text,
+                          initialValue: "none",
                           decoration: InputDecoration(
                               hintText: sp.phoneNumber,
                               hintStyle: TextStyle(

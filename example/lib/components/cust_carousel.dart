@@ -1,3 +1,5 @@
+import 'package:arcore_flutter_plugin_example/models/data_model/md_plant.dart';
+import 'package:arcore_flutter_plugin_example/models/data_model/md_remedy.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:arcore_flutter_plugin_example/models/plant_info.dart';
@@ -7,10 +9,9 @@ import 'package:arcore_flutter_plugin_example/utils/responsive.dart';
 import 'dart:math'; // Import this for randomization
 
 class RemedyPlantCarousel extends StatefulWidget {
-  final List<RemedyInfo> remedies;
-  final List<PlantData> plants;
+  List<dynamic> combinedList;
 
-  RemedyPlantCarousel({required this.remedies, required this.plants});
+  RemedyPlantCarousel({required this.combinedList});
 
   @override
   _RemedyPlantCarouselState createState() => _RemedyPlantCarouselState();
@@ -23,12 +24,6 @@ class _RemedyPlantCarouselState extends State<RemedyPlantCarousel>
   @override
   Widget build(BuildContext context) {
     // Combine remedies and plants into one list and shuffle it
-    List<dynamic> combinedList = [];
-    combinedList.addAll(widget.remedies);
-    combinedList.addAll(widget.plants);
-
-    // Shuffle the combined list
-    combinedList.shuffle(Random());
 
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -50,10 +45,10 @@ class _RemedyPlantCarouselState extends State<RemedyPlantCarousel>
                   });
                 },
               ),
-              items: combinedList.map((item) {
+              items: widget.combinedList.map((item) {
                 return Builder(
                   builder: (BuildContext context) {
-                    if (item is RemedyInfo) {
+                    if (item is RemedyModel) {
                       return Container(
                         child: Stack(
                           children: [
@@ -64,8 +59,8 @@ class _RemedyPlantCarouselState extends State<RemedyPlantCarousel>
                                 padding: const EdgeInsets.all(8.0),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.asset(
-                                    item.remedyImages[0],
+                                  child: Image.network(
+                                    item.image_path![0],
                                     width: 250,
                                     height: 300,
                                     fit: BoxFit.cover,
@@ -83,7 +78,7 @@ class _RemedyPlantCarouselState extends State<RemedyPlantCarousel>
                                 child: Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: Text(
-                                    item.remedyName,
+                                    item.name!,
                                     style: style.displaySmall(context,
                                         color: color.white,
                                         fontsize: setResponsiveSize(context,
@@ -96,7 +91,7 @@ class _RemedyPlantCarouselState extends State<RemedyPlantCarousel>
                           ],
                         ),
                       );
-                    } else if (item is PlantData) {
+                    } else if (item is PlantModel) {
                       return Container(
                         margin: const EdgeInsets.symmetric(horizontal: 5.0),
                         child: Stack(
@@ -108,8 +103,8 @@ class _RemedyPlantCarouselState extends State<RemedyPlantCarousel>
                                 padding: const EdgeInsets.all(8.0),
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(8),
-                                  child: Image.asset(
-                                    item.plantImages[0],
+                                  child: Image.network(
+                                    item.images![0],
                                     width: 300,
                                     height: 300,
                                     fit: BoxFit.cover,
@@ -131,7 +126,7 @@ class _RemedyPlantCarouselState extends State<RemedyPlantCarousel>
                                       vertical: setResponsiveSize(context,
                                           baseSize: 7)),
                                   child: Text(
-                                    item.plantName,
+                                    item.name!,
                                     style: style.displaySmall(context,
                                         color: color.white,
                                         fontsize: setResponsiveSize(context,
@@ -145,7 +140,9 @@ class _RemedyPlantCarouselState extends State<RemedyPlantCarousel>
                         ),
                       );
                     } else {
-                      return SizedBox(); // Fallback in case of an unrecognized type
+                      return Container(
+                        child: Text('Unknown type'),
+                      ); // Fallback in case of an unrecognized type
                     }
                   },
                 );

@@ -45,7 +45,7 @@ class BaseCard extends StatelessWidget with Application {
                       borderRadius: BorderRadius.circular(
                           setResponsiveSize(context, baseSize: 10)),
                       image: DecorationImage(
-                          image: AssetImage(imagePath), fit: BoxFit.cover),
+                          image: NetworkImage(imagePath), fit: BoxFit.cover),
                     ),
                   ),
                   Positioned(

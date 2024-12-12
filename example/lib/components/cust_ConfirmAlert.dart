@@ -98,7 +98,7 @@ class _ConfirmValidationAlertState extends State<ConfirmValidationAlert>
             TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.symmetric(
-                    horizontal: setResponsiveSize(context, baseSize: 35),
+                    horizontal: setResponsiveSize(context, baseSize: 20),
                     vertical: setResponsiveSize(context, baseSize: 10)),
                 backgroundColor: color.invalid,
                 shape: RoundedRectangleBorder(
@@ -118,7 +118,7 @@ class _ConfirmValidationAlertState extends State<ConfirmValidationAlert>
             TextButton(
               style: TextButton.styleFrom(
                 padding: EdgeInsets.symmetric(
-                    horizontal: setResponsiveSize(context, baseSize: 35),
+                    horizontal: setResponsiveSize(context, baseSize: 20),
                     vertical: setResponsiveSize(context, baseSize: 10)),
                 backgroundColor: color.primary,
                 shape: RoundedRectangleBorder(

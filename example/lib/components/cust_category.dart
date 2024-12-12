@@ -16,9 +16,7 @@ class CategoryChip extends StatelessWidget with Application {
       builder: (controller) {
         bool isSelected = controller.selectedCategory.value == label;
         return GestureDetector(
-          onTap: () {
-            controller.selectCategory(label);
-          },
+          onTap: () {},
           child: Container(
             padding: EdgeInsets.symmetric(
               horizontal: setResponsiveSize(context, baseSize: 12),

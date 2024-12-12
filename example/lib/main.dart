@@ -1,3 +1,4 @@
+import 'package:arcore_flutter_plugin_example/constants/global_adds.dart';
 import 'package:flutter/material.dart';
 import 'package:arcore_flutter_plugin/arcore_flutter_plugin.dart'
     show ArCoreController;
@@ -14,7 +15,7 @@ import 'package:arcore_flutter_plugin_example/helper/_init_dependencies.dart';
 import 'package:arcore_flutter_plugin_example/routes/screen_routes.dart';
 import 'package:path_provider/path_provider.dart';
 import 'SCREEN/SPLASH/splash_screen.dart';
-import 'api/api_plant.dart';
+import 'package:camera/camera.dart';
 import 'firebase_options.dart';
 import 'models/client_data.dart';
 import 'models/plant_info.dart';
@@ -24,10 +25,6 @@ import 'models/remedy_info.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  print('ARCORE IS AVAILABLE?');
-  print(await ArCoreController.checkArCoreAvailability());
-  print('\nAR SERVICES INSTALLED?');
-  print(await ArCoreController.checkIsArCoreInstalled());
   // Initialize Firebase
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
@@ -37,7 +34,7 @@ void main() async {
 
   // Initialize environment variables
   await dotenv.load(fileName: ".env");
-
+  await initializeCamera();
   // Initialize Hive
   final appDocumentDir = await getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
@@ -56,6 +53,11 @@ void main() async {
   await Hive.openBox('bookmarkedRemedies');
   await Hive.openBox('bookmarkHistory');
   runApp(MainApp());
+}
+
+Future initializeCamera() async {
+  final cameras = await availableCameras();
+  cameraDescription = cameras.first;
 }
 
 class MainApp extends StatelessWidget {

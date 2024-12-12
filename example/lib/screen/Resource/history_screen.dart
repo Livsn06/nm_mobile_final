@@ -1,3 +1,4 @@
+import 'package:arcore_flutter_plugin_example/models/data_model/md_plant.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -216,25 +217,24 @@ class _HistoryScreenState extends State<HistoryScreen> with Application {
                           itemCount: bookmarks.length,
                           itemBuilder: (context, index) {
                             final item = bookmarks[index];
-                            if (item is PlantData) {
+                            if (item is PlantModel) {
                               return InkWell(
                                 onTap: () =>
                                     dashControl.selectPlant(item, context),
                                 child: CardList(
-                                  requestImage: Image.asset(item.plantImages[0],
+                                  requestImage: Image.asset(item.images![0],
                                       width: 70, height: 70),
-                                  requestTitle: Text(item.plantName),
+                                  requestTitle: Text(item.name!),
                                   subRequestTitle: Text(
-                                      'Scientific Name: ${item.scientificName}'),
+                                      'Scientific Name: ${item.scientific_name!}'),
                                   settingsTapped: null,
-                                  deleteTapped: (context) =>
-                                      controller.removeBookmark(item, context),
+                                  deleteTapped: (context) {},
                                 ),
                               );
                             } else if (item is RemedyInfo) {
                               return InkWell(
-                                onTap: () =>
-                                    dashControl.selectRemedy(item, context),
+                                onTap: () {},
+                                // dashControl.selectRemedy(item, context),
                                 child: CardList(
                                   requestImage: Image.asset(
                                       item.remedyImages[0],

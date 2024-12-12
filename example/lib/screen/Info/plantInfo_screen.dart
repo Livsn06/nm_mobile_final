@@ -1,3 +1,5 @@
+import 'package:arcore_flutter_plugin_example/controllers/Data_Control/ct_remedy.dart';
+import 'package:arcore_flutter_plugin_example/models/data_model/md_plant.dart';
 import 'package:arcore_flutter_plugin_example/screen/Info/remedy_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -12,7 +14,7 @@ import '../../utils/_initApp.dart';
 import '../../utils/responsive.dart';
 
 class PlantInfoScreen extends StatefulWidget {
-  final PlantData plant;
+  final PlantModel plant;
   const PlantInfoScreen({super.key, required this.plant});
 
   @override
@@ -23,6 +25,8 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
   final PageController _pageController = PageController(initialPage: 0);
   final PlantInfoController plantInfoController =
       Get.put(PlantInfoController());
+
+  final CtRemedy ctRemedy = Get.put(CtRemedy());
 
   @override
   void initState() {
@@ -89,7 +93,7 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                         height: setResponsiveSize(context, baseSize: 250),
                         child: PageView.builder(
                           controller: _pageController,
-                          itemCount: widget.plant.plantImages.length,
+                          itemCount: widget.plant.images!.length,
                           itemBuilder: (context, index) {
                             return Padding(
                               padding: EdgeInsets.all(
@@ -100,8 +104,8 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                                 child: Padding(
                                   padding: EdgeInsets.all(
                                       setResponsiveSize(context, baseSize: 12)),
-                                  child: Image.asset(
-                                    widget.plant.plantImages[index],
+                                  child: Image.network(
+                                    widget.plant.images![index],
                                     fit: BoxFit.cover,
                                   ),
                                 ),
@@ -126,7 +130,7 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                       Row(
                         children: [
                           Text(
-                            widget.plant.plantName,
+                            widget.plant.name!,
                             style: style.InterSmallText(context,
                                 color: color.primarylow,
                                 fontsize:
@@ -161,7 +165,7 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                         ],
                       ),
                       Text(
-                        'Scientific Name: ${widget.plant.scientificName}',
+                        'Scientific Name: ${widget.plant.scientific_name!}',
                         style: style.InterSmallText(context,
                             color: color.primarylow,
                             fontsize: setResponsiveSize(context, baseSize: 15),
@@ -179,7 +183,7 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                       ),
                       Gap(setResponsiveSize(context, baseSize: 10)),
                       Text(
-                        widget.plant.description,
+                        widget.plant.description!,
                         textAlign: TextAlign.justify,
                         style: style.InterSmallText(context,
                             color: color.primarylow,
@@ -201,12 +205,10 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                         child: Wrap(
                           spacing: setResponsiveSize(context, baseSize: 7),
                           runSpacing: setResponsiveSize(context, baseSize: 5),
-                          children: widget.plant.treatments
+                          children: widget.plant.treatments!
                               .asMap()
                               .entries
                               .map((entry) {
-                            String treatment = entry.value;
-
                             return IntrinsicWidth(
                               child: TextButton(
                                 onPressed: () {},
@@ -224,7 +226,7 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                                   ),
                                 ),
                                 child: Text(
-                                  treatment,
+                                  entry.value.name!,
                                   textAlign: TextAlign.justify,
                                   style: style.InterSmallText(
                                     context,
@@ -248,51 +250,65 @@ class _PlantInfoScreenState extends State<PlantInfoScreen> with Application {
                             fontweight: FontWeight.w700),
                       ),
                       Gap(setResponsiveSize(context, baseSize: 10)),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Wrap(
-                          spacing: setResponsiveSize(context, baseSize: 7),
-                          runSpacing: setResponsiveSize(context,
-                              baseSize: 5), // Vertical space between rows
-                          children: widget.plant.remedyList
-                              .asMap()
-                              .entries
-                              .map((entry) {
-                            RemedyInfo treatment = entry.value;
-                            return IntrinsicWidth(
-                              child: TextButton(
-                                onPressed: () {
-                                  Get.to(() =>
-                                      RemedyInfoScreen(remedy: treatment));
-                                },
-                                style: ButtonStyle(
-                                  backgroundColor:
-                                      WidgetStatePropertyAll(color.primarylow),
-                                  shape: WidgetStatePropertyAll<
-                                      RoundedRectangleBorder>(
-                                    RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        setResponsiveSize(context, baseSize: 5),
+                      (ctRemedy.getRemedyTagByPlantId(widget.plant.id!).isEmpty)
+                          ? Text(
+                              '- No remedy found -',
+                              style: style.InterSmallText(
+                                context,
+                                color: color.darkOpacity40,
+                                fontsize:
+                                    setResponsiveSize(context, baseSize: 15),
+                                fontweight: FontWeight.w400,
+                                fontstyle: FontStyle.italic,
+                              ),
+                            )
+                          : SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Wrap(
+                                spacing:
+                                    setResponsiveSize(context, baseSize: 7),
+                                runSpacing: setResponsiveSize(context,
+                                    baseSize: 5), // Vertical space between rows
+                                children: ctRemedy
+                                    .getRemedyTagByPlantId(widget.plant.id!)
+                                    .asMap()
+                                    .entries
+                                    .map((entry) {
+                                  return IntrinsicWidth(
+                                    child: TextButton(
+                                      onPressed: () {
+                                        Get.to(() => RemedyInfoScreen(
+                                            remedy: entry.value));
+                                      },
+                                      style: ButtonStyle(
+                                        backgroundColor: WidgetStatePropertyAll(
+                                            color.primarylow),
+                                        shape: WidgetStatePropertyAll<
+                                            RoundedRectangleBorder>(
+                                          RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              setResponsiveSize(context,
+                                                  baseSize: 5),
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      child: Text(
+                                        entry.value.name!,
+                                        textAlign: TextAlign.justify,
+                                        style: style.InterSmallText(
+                                          context,
+                                          color: color.white,
+                                          fontsize: setResponsiveSize(context,
+                                              baseSize: 14),
+                                          fontweight: FontWeight.w400,
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                child: Text(
-                                  treatment.remedyName,
-                                  textAlign: TextAlign.justify,
-                                  style: style.InterSmallText(
-                                    context,
-                                    color: color.white,
-                                    fontsize: setResponsiveSize(context,
-                                        baseSize: 14),
-                                    fontweight: FontWeight.w400,
-                                  ),
-                                ),
+                                  );
+                                }).toList(),
                               ),
-                            );
-                          }).toList(),
-                        ),
-                      )
+                            ),
                     ],
                   ),
                 ),

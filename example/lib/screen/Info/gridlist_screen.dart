@@ -186,8 +186,7 @@ class _GridlistScreenState extends State<GridlistScreen> with Application {
                                   0.0),
                               builder: (context, snapshot) {
                                 return InkWell(
-                                  onTap: () =>
-                                      dashControl.selectPlant(plant, context),
+                                  onTap: () {},
                                   child: Card(
                                     elevation: 2,
                                     shape: RoundedRectangleBorder(
